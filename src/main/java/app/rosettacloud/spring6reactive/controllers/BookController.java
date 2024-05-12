@@ -1,6 +1,7 @@
 package app.rosettacloud.spring6reactive.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,7 +52,7 @@ public class BookController {
 
     @PutMapping(BOOK_PATH_ID)
     public ResponseEntity<Void> updateBook(@PathVariable("bookID") Integer bookId,
-            @RequestBody BookDTO bookDTO) {
+            @Validated @RequestBody BookDTO bookDTO) {
 
         bookService.updateBook(bookId, bookDTO)
                 .subscribe();
@@ -61,11 +62,12 @@ public class BookController {
 
     @PatchMapping(BOOK_PATH_ID)
     public ResponseEntity<Void> patchBook(@PathVariable("bookID") Integer bookId,
-            @RequestBody BookDTO bookDTO) {
+            @Validated @RequestBody BookDTO bookDTO) {
         bookService.patchBook(bookId, bookDTO)
                 .subscribe();
         return ResponseEntity.ok().build();
     }
+
     @DeleteMapping(BOOK_PATH_ID)
     public ResponseEntity<Void> deleteBook(@PathVariable("bookID") Integer bookId) {
         bookService.deleteBook(bookId)
