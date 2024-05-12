@@ -7,7 +7,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import app.rosettacloud.spring6reactive.domain.Book;
+import app.rosettacloud.spring6reactive.domain.Customer;
 import app.rosettacloud.spring6reactive.repositories.BookRepository;
+import app.rosettacloud.spring6reactive.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 
 // CommandLineRunner to run on startup
@@ -15,14 +17,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BootStrapData implements CommandLineRunner {
     private final BookRepository bookRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
         loadBookData();
+        loadCustomerData();
         bookRepository.count().subscribe(
                 count -> {
-                    System.out.println("Count is: " + count);
+                    System.out.println("Books Count is: " + count);
                 });
+        customerRepository.count().subscribe(count -> {
+            System.out.println("Customer Count is: " + count);
+        });
     }
 
     private void loadBookData() {
@@ -64,5 +71,26 @@ public class BootStrapData implements CommandLineRunner {
                         bookRepository.save(Book3).subscribe();
                     }
                 });
+    }
+
+    private void loadCustomerData() {
+        customerRepository.count().subscribe(count -> {
+            if (count == 0) {
+                customerRepository.save(Customer.builder()
+                        .customerName("Customer 1")
+                        .build())
+                        .subscribe();
+
+                customerRepository.save(Customer.builder()
+                        .customerName("Customer 2")
+                        .build())
+                        .subscribe();
+
+                customerRepository.save(Customer.builder()
+                        .customerName("Customer 3")
+                        .build())
+                        .subscribe();
+            }
+        });
     }
 }
