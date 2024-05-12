@@ -13,4 +13,8 @@ public interface BookService {
 
     Mono<BookDTO> updateBook(Integer bookId, BookDTO bookDTO);
 
+    Mono<BookDTO> patchBook(Integer bookId, BookDTO bookDTO);
+
+    Mono<Void> deleteBook(Integer bookId);
+
 }

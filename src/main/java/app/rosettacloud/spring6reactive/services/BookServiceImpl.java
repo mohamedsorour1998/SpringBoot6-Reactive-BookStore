@@ -1,6 +1,7 @@
 package app.rosettacloud.spring6reactive.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import app.rosettacloud.spring6reactive.mappers.BookMapper;
 import app.rosettacloud.spring6reactive.model.BookDTO;
@@ -45,6 +46,32 @@ public class BookServiceImpl implements BookService {
                     return bookRepository.save(oldBook);
                 })
                 .map(bookMapper::toDto);
+    }
+
+    @Override
+    public Mono<BookDTO> patchBook(Integer bookId, BookDTO bookDTO) {
+
+        return bookRepository.findById(bookId)
+                .flatMap(oldBook -> {
+                    if (StringUtils.hasText(bookDTO.getBookName())) {
+                        oldBook.setBookName(bookDTO.getBookName());
+                    }
+                    if (bookDTO.getBookStyle() != null) {
+                        oldBook.setBookStyle(bookDTO.getBookStyle());
+                    }
+                    if (bookDTO.getUpc() != null) {
+                        oldBook.setUpc(bookDTO.getUpc());
+                    }
+                    if (bookDTO.getQuantityOnHand() != null) {
+                        oldBook.setQuantityOnHand(bookDTO.getQuantityOnHand());
+                    }
+                    return bookRepository.save(oldBook);
+                }).map(bookMapper::toDto);
+    }
+
+    @Override
+    public Mono<Void> deleteBook(Integer bookId) {
+        return bookRepository.deleteById(bookId);
     }
 
 }

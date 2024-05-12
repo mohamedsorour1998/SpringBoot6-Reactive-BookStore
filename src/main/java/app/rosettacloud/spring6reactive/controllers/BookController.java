@@ -1,7 +1,9 @@
 package app.rosettacloud.spring6reactive.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +40,6 @@ public class BookController {
     public Mono<ResponseEntity<?>> addBook(@RequestBody BookDTO bookDTO) {
         return bookService.addBook(bookDTO)
                 .map(savedBook -> ResponseEntity.created(
-
                         // .build().toUri(), which converts the URI components into a URI object that is
                         // suitable for the ResponseEntity.
                         UriComponentsBuilder
@@ -56,6 +57,20 @@ public class BookController {
                 .subscribe();
         return ResponseEntity.ok().build();
 
+    }
+
+    @PatchMapping(BOOK_PATH_ID)
+    public ResponseEntity<Void> patchBook(@PathVariable("bookID") Integer bookId,
+            @RequestBody BookDTO bookDTO) {
+        bookService.patchBook(bookId, bookDTO)
+                .subscribe();
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping(BOOK_PATH_ID)
+    public ResponseEntity<Void> deleteBook(@PathVariable("bookID") Integer bookId) {
+        bookService.deleteBook(bookId)
+                .subscribe();
+        return ResponseEntity.ok().build();
     }
 
 }
