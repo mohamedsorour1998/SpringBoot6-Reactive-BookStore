@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.context.annotation.Import;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import app.rosettacloud.spring6reactive.config.DatabaseConfig;
 import app.rosettacloud.spring6reactive.domain.Book;
 
@@ -15,6 +18,12 @@ import app.rosettacloud.spring6reactive.domain.Book;
 public class BookRepositoryTest {
     @Autowired
     BookRepository bookRepository;
+
+    @Test
+    void testCreateJson() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(objectMapper.writeValueAsString(getTestBook()));
+    }
 
     @Test
     void saveNewBook() {
@@ -34,4 +43,5 @@ public class BookRepositoryTest {
                 .upc("12345")
                 .build();
     }
+
 }

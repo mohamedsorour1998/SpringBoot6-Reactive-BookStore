@@ -27,4 +27,24 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::toDto);
     }
 
+    @Override
+    public Mono<BookDTO> addBook(BookDTO bookDTO) {
+        return bookRepository.save(bookMapper.toBook(bookDTO))
+                .map(bookMapper::toDto);
+    }
+
+    @Override
+    public Mono<BookDTO> updateBook(Integer bookId, BookDTO newBookDTO) {
+        return bookRepository.findById(bookId)
+                .flatMap(oldBook -> {
+                    oldBook.setBookName(newBookDTO.getBookName());
+                    oldBook.setBookStyle(newBookDTO.getBookStyle());
+                    oldBook.setUpc(newBookDTO.getUpc());
+                    oldBook.setPrice(newBookDTO.getPrice());
+                    oldBook.setQuantityOnHand(newBookDTO.getQuantityOnHand());
+                    return bookRepository.save(oldBook);
+                })
+                .map(bookMapper::toDto);
+    }
+
 }

@@ -8,4 +8,9 @@ public interface BookService {
     Flux<BookDTO> listBooks();
 
     Mono<BookDTO> getBookById(Integer id);
+
+    Mono<BookDTO> addBook(BookDTO bookDTO);
+
+    Mono<BookDTO> updateBook(Integer bookId, BookDTO bookDTO);
+
 }
