@@ -18,75 +18,90 @@ import reactor.core.publisher.Mono;
 @SpringBootTest
 @AutoConfigureWebTestClient
 public class CustomerControllerTest {
-    @Autowired
-    WebTestClient webTestClient;
+        @Autowired
+        WebTestClient webTestClient;
 
-    private Customer getTestCustomer() {
-        return Customer.builder()
-                .customerName("testCust1")
-                .build();
-    }
+        private Customer getTestCustomer() {
+                return Customer.builder()
+                                .customerName("testCust1")
+                                .build();
+        }
 
-    @Test
-    @Order(3)
-    void testCreateNewCustomer() {
-        webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
-                .body(Mono.just(
-                        this.getTestCustomer()),
-                        CustomerDTO.class)
-                .header("Content-type", "application/json")
-                .exchange()
-                .expectStatus().isCreated()
-                .expectHeader().location("http://localhost:8080/api/v2/customer/4")
-                .expectBody(CustomerDTO.class);
+        @Test
+        @Order(3)
+        void testCreateNewCustomer() {
+                webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
+                                .body(Mono.just(
+                                                this.getTestCustomer()),
+                                                CustomerDTO.class)
+                                .header("Content-type", "application/json")
+                                .exchange()
+                                .expectStatus().isCreated()
+                                .expectHeader().location("http://localhost:8080/api/v2/customer/4")
+                                .expectBody(CustomerDTO.class);
 
-    }
+        }
 
-    @Test
-    @Order(4)
-    void testDeleteById() {
-        webTestClient.delete().uri(CustomerController.CUSTOMER_PATH_ID, 4)
-                .exchange();
+        @Test
+        @Order(3)
+        void testCreateNewCustomerFail() {
+                Customer badCustomer = this.getTestCustomer();
+                badCustomer.setCustomerName("");
+                webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
+                                .body(Mono.just(
+                                                badCustomer),
+                                                CustomerDTO.class)
+                                .header("Content-type", "application/json")
+                                .exchange()
+                                .expectStatus().isBadRequest();
+
+        }
+
+        @Test
+        @Order(4)
+        void testDeleteById() {
+                webTestClient.delete().uri(CustomerController.CUSTOMER_PATH_ID, 4)
+                                .exchange();
                 // .expectStatus().isNoContent();
-    }
+        }
 
-    @Test
-    @Order(2)
-    void testGetCustomerById() {
-        webTestClient.get().uri(CustomerController.CUSTOMER_PATH_ID, 1)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().valueEquals("Content-type", "application/json")
-                .expectBody(CustomerDTO.class);
+        @Test
+        @Order(2)
+        void testGetCustomerById() {
+                webTestClient.get().uri(CustomerController.CUSTOMER_PATH_ID, 1)
+                                .exchange()
+                                .expectStatus().isOk()
+                                .expectHeader().valueEquals("Content-type", "application/json")
+                                .expectBody(CustomerDTO.class);
 
-    }
+        }
 
-    @Test
-    @Order(1)
-    void testListCustomers() {
-        webTestClient.get().uri(CustomerController.CUSTOMER_PATH)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().valueEquals("Content-type", "application/json")
-                .expectBody().jsonPath("$.size()").isEqualTo(3);
-    }
+        @Test
+        @Order(1)
+        void testListCustomers() {
+                webTestClient.get().uri(CustomerController.CUSTOMER_PATH)
+                                .exchange()
+                                .expectStatus().isOk()
+                                .expectHeader().valueEquals("Content-type", "application/json")
+                                .expectBody().jsonPath("$.size()").isEqualTo(3);
+        }
 
-    @Test
-    @Order(5)
-    void testPatchExistingCustomer() {
+        @Test
+        @Order(5)
+        void testPatchExistingCustomer() {
 
-    }
+        }
 
-    @Test
-    @Order(6)
-    void testUpdateExistingCustomer() {
-        webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID, 1)
-                .body(Mono.just(
-                        BookRepositoryTest.getTestBook()),
-                        CustomerDTO.class)
-                .exchange()
-                .expectStatus().isNoContent()
-                .expectBody(CustomerDTO.class);
+        @Test
+        @Order(6)
+        void testUpdateExistingCustomer() {
+                webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID, 1)
+                                .body(Mono.just(
+                                                BookRepositoryTest.getTestBook()),
+                                                CustomerDTO.class)
+                                .exchange()
+                                .expectStatus().isNoContent()
+                                .expectBody(CustomerDTO.class);
 
-    }
+        }
 }

@@ -38,7 +38,7 @@ public class BookController {
     }
 
     @PostMapping(BOOK_PATH)
-    public Mono<ResponseEntity<?>> addBook(@RequestBody BookDTO bookDTO) {
+    public Mono<ResponseEntity<?>> addBook(@Validated @RequestBody BookDTO bookDTO) {
         return bookService.addBook(bookDTO)
                 .map(savedBook -> ResponseEntity.created(
                         // .build().toUri(), which converts the URI components into a URI object that is
@@ -51,7 +51,7 @@ public class BookController {
     }
 
     @PutMapping(BOOK_PATH_ID)
-    public ResponseEntity<Void> updateBook(@PathVariable("bookID") Integer bookId,
+    public ResponseEntity<Void> updateBook(@Validated @PathVariable("bookID") Integer bookId,
             @Validated @RequestBody BookDTO bookDTO) {
 
         bookService.updateBook(bookId, bookDTO)
@@ -61,7 +61,7 @@ public class BookController {
     }
 
     @PatchMapping(BOOK_PATH_ID)
-    public ResponseEntity<Void> patchBook(@PathVariable("bookID") Integer bookId,
+    public ResponseEntity<Void> patchBook(@Validated @PathVariable("bookID") Integer bookId,
             @Validated @RequestBody BookDTO bookDTO) {
         bookService.patchBook(bookId, bookDTO)
                 .subscribe();
