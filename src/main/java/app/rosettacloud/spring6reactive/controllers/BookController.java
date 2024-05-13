@@ -56,7 +56,7 @@ public class BookController {
 
         bookService.updateBook(bookId, bookDTO)
                 .subscribe();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
 
     }
 
@@ -65,14 +65,14 @@ public class BookController {
             @Validated @RequestBody BookDTO bookDTO) {
         bookService.patchBook(bookId, bookDTO)
                 .subscribe();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(BOOK_PATH_ID)
     public ResponseEntity<Void> deleteBook(@PathVariable("bookID") Integer bookId) {
         bookService.deleteBook(bookId)
                 .subscribe();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -34,7 +34,7 @@ public class BookRepositoryTest {
                         });
     }
 
-    Book getTestBook() {
+    public static Book getTestBook() {
         return Book.builder()
                 .bookName("Book1")
                 .bookStyle("HardCover")
