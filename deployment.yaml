@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: sp6r
+  name: sp6r
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sp6r
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sp6r
+    spec:
+      containers:
+        - image: mohamedsorour/springboot6-bookstore:v1
+          imagePullPolicy: Always
+          name: springbootimage
+          resources: {}
+          env:
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_R2DBC
+              value: INFO
+            - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINT_READINESSATE_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINT_LIVENESS_ENABLED
+              value: "true"
+            - name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+              value: 30s
+            - name: SERVER_SHUTDOWN
+              value: graceful
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+
+status: {}
